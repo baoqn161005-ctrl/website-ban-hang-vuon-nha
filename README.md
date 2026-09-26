@@ -1,2 +1,2 @@
-# X-y-d-ng-website-b-n-h-ng-tr-c-tuy-n-V-n-Nh-
+# Xây dựng website bán hàng trực tuyến Vườn Nhà
 Bài thi giữa kỳ môn học Công Nghệ Phần Mềm
