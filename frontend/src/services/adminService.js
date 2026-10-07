@@ -1,0 +1,10 @@
+import { api } from './api';
+export const stats = () => api('/orders/admin/stats');
+export const orders = () => api('/orders/admin/all');
+export const setStatus = (id, status) => api(`/orders/${id}/status`, { method: 'PUT', body: { status } });
+export const markPaid = id => api(`/orders/${id}/paid`, { method: 'PUT' });
+export const saveProduct = (id, formData) => api(id ? '/products/' + id : '/products', { method: id ? 'PUT' : 'POST', body: formData });
+export const deleteProduct = id => api('/products/' + id, { method: 'DELETE' });
+export const saveCategory = (id, name) => api(id ? '/categories/' + id : '/categories', { method: id ? 'PUT' : 'POST', body: { name } });
+export const deleteCategory = id => api('/categories/' + id, { method: 'DELETE' });
+export const STATUS = ['Chờ xác nhận', 'Đang giao', 'Hoàn thành', 'Đã hủy'];

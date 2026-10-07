@@ -1,0 +1,58 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-change-this-root-password}
+      MYSQL_DATABASE: ${DB_NAME:-vuon_nha}
+      MYSQL_USER: ${DB_USER:-vuonnha}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-change-this-db-password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-vuon_nha}
+      DB_USER: ${DB_USER:-vuonnha}
+      DB_PASSWORD: ${DB_PASSWORD:-change-this-db-password}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env before starting}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@vuonnha.vn}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env before starting}
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+      BANK_ID: ${BANK_ID:-MB}
+      BANK_NO: ${BANK_NO:-}
+      BANK_NAME: ${BANK_NAME:-VUON NHA SHOP}
+      SHOP_ADDR: ${SHOP_ADDR:-}
+      SHOP_PHONE: ${SHOP_PHONE:-}
+      SHOP_EMAIL: ${SHOP_EMAIL:-}
+      SHOP_HOURS: ${SHOP_HOURS:-}
+      PAY_TIMEOUT_MIN: ${PAY_TIMEOUT_MIN:-60}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      SEPAY_API_KEY: ${SEPAY_API_KEY:-}
+      CASSO_SECURE_TOKEN: ${CASSO_SECURE_TOKEN:-}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - uploads_data:/app/backend/uploads
+
+volumes:
+  mysql_data:
+  uploads_data:
